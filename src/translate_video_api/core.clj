@@ -21,7 +21,7 @@
     (let [{:keys [body]} request
           res {:translation_status "translation_processing"}
           link (get body "link")]
-      
+
       (translate ["vot-cli" link] {:chat-id (get body "chat_id") :link link} 10000)
 
       (logging/info "RESPONSE:" res)
