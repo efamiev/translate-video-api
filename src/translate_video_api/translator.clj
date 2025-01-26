@@ -17,7 +17,7 @@
 
 (defn send-translate-link [chat-id link]
   (client/post
-   "https://api.telegram.org/bot7617398751:AAFY2rv5OW7rkyKtRAWOByPIuYq8e4eJN5E/sendMessage"
+   "https://api.telegram.org/bot{bot-token}/sendMessage"
    {:body (generate-string {:chat_id chat-id :text link}) :content-type :json}))
 
 (defn message [])
