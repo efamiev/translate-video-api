@@ -6,6 +6,8 @@
             [cheshire.core :refer [generate-string]])
   (:import [java.lang ProcessBuilder]))
 
+(def telegram-url (str "https://api.telegram.org/bot" (System/getenv "BOT_TOKEN") "/sendMessage"))
+
 (defn remove-apostrophes [input]
   (str/replace input #"\"" ""))
 
@@ -18,7 +20,7 @@
 (defn send-translate-link [{:keys [chat-id link]} translated-link]
   (let [text (str "Audio translation of the video " link " is located at the link\n\n" translated-link)]
     (client/post
-     "https://api.telegram.org/bot7617398751:AAFY2rv5OW7rkyKtRAWOByPIuYq8e4eJN5E/sendMessage"
+     telegram-url
      {:body (generate-string {:chat_id chat-id :text text}) :content-type :json})))
 
 (defn translate [cmd sender-data timeout]
