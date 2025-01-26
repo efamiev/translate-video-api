@@ -7,11 +7,11 @@
 
 (defmacro with-translate
   [result & body]
-  `(with-redefs [translate (fn [~'cmd ~'timeout ~'chat-id] ~result)]
+  `(with-redefs [translate (fn [~'cmd ~'sender-data ~'timeout] ~result)]
      ~@body))
 
 (deftest test-app
-  (testing "Отправляем положительный статус о начале перевода"
+  (testing "Send a positive status indicating the start of the translation"
     (with-translate "ok"
       (let [request (-> (mock/request :post "/api/initialize_translation")
                         (mock/json-body (generate-string {:link "https://youtube.com/shorts/ABbrWOmvgRU?si=pCQjpCOE4lgWsWek" :chat_id 1})))

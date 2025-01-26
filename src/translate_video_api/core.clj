@@ -12,15 +12,17 @@
   (GET "*" request
     (let [{:keys [uri request-method]} request]
       {:status 200
-       :headers {"Content-Type" "text/plain"} :body (format "You requested %s %s"
-                                                            (-> request-method name .toUpperCase)
-                                                            uri)}))
+       :headers {"Content-Type" "text/plain"}
+       :body (format "You requested %s %s" (-> request-method name .toUpperCase) uri)}))
 
   (POST "/api/initialize_translation" request
     ; Create logs middleware
     (logging/info "REQUEST BODY:" (get request :body))
-    (let [{:keys [body]} request res {:translation_status "translation_processing"}]
-      (translate ["vot-cli" (get body "link")] 10000 (get body "chat_id"))
+    (let [{:keys [body]} request
+          res {:translation_status "translation_processing"}
+          link (get body "link")]
+      
+      (translate ["vot-cli" link] {:chat-id (get body "chat_id") :link link} 10000)
 
       (logging/info "RESPONSE:" res)
       {:status 200 :body res}))
