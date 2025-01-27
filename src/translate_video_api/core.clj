@@ -16,7 +16,7 @@
        :body (format "You requested %s %s" (-> request-method name .toUpperCase) uri)}))
 
   (POST "/api/initialize_translation" request
-    ; Create logs middleware
+    ;TODO: Create logs middleware
     (logging/info "REQUEST BODY:" (get request :body))
     (let [{:keys [body]} request
           res {:translation_status "translation_processing"}

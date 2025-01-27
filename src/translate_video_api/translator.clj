@@ -8,14 +8,12 @@
 
 (def telegram-url (str "https://api.telegram.org/bot" (System/getenv "BOT_TOKEN") "/sendMessage"))
 
-(defn remove-apostrophes [input]
-  (str/replace input #"\"" ""))
-
-(defn extract-vtrans-link [s]
-  (remove-apostrophes (clojure.string/trim (last (clojure.string/split s #"\):")))))
-
 (defn find-audio-link [lines]
-  (extract-vtrans-link (some #(when (.startsWith % "Audio Link") %) lines)))
+  (-> (some #(when (.startsWith % "Audio Link") %) lines)
+      (str/split #"\):")
+      last
+      str/trim
+      (str/replace #"\"" "")))
 
 (defn send-translate-link [{:keys [chat-id link]} translated-link]
   (let [text (str "Audio translation of the video " link " is located at the link\n\n" translated-link)]
@@ -46,7 +44,7 @@
                       (send-translate-link sender-data link)
                       {:link link :errors []})))
                  ((fn []
-                    (send-translate-link sender-data (clojure.string/join stderr))
+                    (send-translate-link sender-data (str/join stderr))
                     {:link "" :errors stderr}))))))
 
          (catch Exception e
